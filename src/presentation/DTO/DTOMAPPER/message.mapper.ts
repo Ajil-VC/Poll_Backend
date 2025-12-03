@@ -17,7 +17,9 @@ export class MessageMapper {
             },
             message: msg.message.toString(),
             pollId: msg.pollId.toString(),
-            type: msg.type
+            type: msg.type,
+            createdAt: msg.createdAt!,
+            updatedAt: msg.updatedAt!
         };
     }
 }

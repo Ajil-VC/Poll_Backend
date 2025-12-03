@@ -1,9 +1,9 @@
 import { Server } from 'socket.io';
-import { addUser, getAllUsers, getUserDetails, removeUser } from '../services/socket.manager';
-import { config } from './config';
+import { addUser, getAllUsers, getUserDetails, removeUser } from '../../services/socket.manager';
+import { config } from '../config';
 import jwt from 'jsonwebtoken';
-import { User } from '../../domain/entities/user.type';
-
+import { User } from '../../../domain/entities/user.type';
+import { sendMsgUsecase } from './socket.di';
 
 let io: Server | null = null;
 
@@ -66,26 +66,27 @@ export const setupSocket = (server: any) => {
             console.log(`User ${user.id} connected with socket ${socket.id}`);
         }
 
-        socket.on('send-message', (data) => {
+        socket.on('send-message', async (data) => {
             // const username = users.get(socket.id);
-            const message = {
-                userId: socket.id,
-                username: 'Anonymous',
-                text: data.text,
-                timestamp: new Date().toISOString()
-            };
+            try {
 
-            // Broadcast message to all connected clients
-            if (io) {
-                io.emit('new-message', message);
-                console.log('Message sent:', message);
+                console.log(data)
+                const message = await sendMsgUsecase.execute(user.id, data.text, data.pollId);
+
+                if (io) {
+                    io.emit('new-message', message);
+                    console.log('Message sent:', message);
+                }
+
+            } catch (err) {
+                console.error(err);
             }
         });
 
         // Handle typing indicator
         socket.on('typing', (isTyping) => {
             const userDtls = getUserDetails(user.id);
-            if (userDtls && isTyping) {
+            if (userDtls) {
                 socket.broadcast.emit('user-typing', { email: userDtls.userEmail, isTyping });
             }
         });

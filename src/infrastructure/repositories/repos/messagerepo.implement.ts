@@ -6,7 +6,7 @@ import messageModel from "../../database/message.model";
 
 export class MessageRepositoryImp implements IMessageRepository {
 
-    sendMessage = async (userId: string, message: string, pollId: string, type: "text" | "system"): Promise<MessageWithUser> => {
+    sendMessage = async (userId: string, message: string, pollId: string, type: "text" | "system" = 'text'): Promise<MessageWithUser> => {
 
         const userOb = new mongoose.Types.ObjectId(userId);
         const pollOb = new mongoose.Types.ObjectId(pollId);

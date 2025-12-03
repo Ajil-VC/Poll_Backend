@@ -5,7 +5,7 @@ import userRouter from './presentation/routes/user.routes';
 import { AppError } from './shared/error';
 import connectDB from './infrastructure/config/connectDB';
 import http from 'http';
-import { setupSocket } from './infrastructure/config/socket';
+import { setupSocket } from './infrastructure/config/socket/socket';
 
 const app = express();
 connectDB();
