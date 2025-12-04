@@ -6,6 +6,19 @@ import messageModel from "../../database/message.model";
 
 export class MessageRepositoryImp implements IMessageRepository {
 
+
+    getMessages = async (pollId: string, skip: number, limit: number): Promise<MessageWithUser[]> => {
+
+        const pollOb = new mongoose.Types.ObjectId(pollId);
+        const messages = await messageModel
+            .find({ pollId: pollOb })
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit).populate({ path: 'userId' });
+
+        return messages;
+    }
+
     sendMessage = async (userId: string, message: string, pollId: string, type: "text" | "system" = 'text'): Promise<MessageWithUser> => {
 
         const userOb = new mongoose.Types.ObjectId(userId);

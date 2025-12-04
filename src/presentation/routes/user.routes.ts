@@ -2,7 +2,7 @@
 
 import express from 'express';
 
-import { authControllerDepandancy, pollControllerDepandancy } from './dependancy/user.dependancy';
+import { authControllerDepandancy, messageDepandancy, pollControllerDepandancy } from './dependancy/user.dependancy';
 import { authenticateAdmin } from '../middleware/admin.middleware';
 import { authenticateUser } from '../middleware/user.middleware';
 
@@ -24,6 +24,8 @@ userRouter.route('/poll')
     .put(authenticateAdmin, pollControllerDepandancy.giveVote);
 
 userRouter.get('/poll/:id', pollControllerDepandancy.getPollWithId);
+
+userRouter.get('/message', messageDepandancy.getMessages);
 
 
 export default userRouter;

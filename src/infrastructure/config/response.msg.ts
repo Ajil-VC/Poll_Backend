@@ -12,6 +12,7 @@ export const RESPONSE_MESSAGES = {
         SERVER_ERROR: 'Something went wrong. Please try again later.',
         SUCCESS: 'Success',
         FAILED: 'Failed',
-        COULDNT_FETCH: 'Couldnt fetch the data'
+        COULDNT_FETCH: 'Couldnt fetch the data',
+        BAD_REQUEST: 'Invalid request'
     }
 };

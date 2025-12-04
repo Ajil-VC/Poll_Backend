@@ -17,6 +17,12 @@ import { GetPollsUsecase } from "../../../application/usecase/poll/getpolls.usec
 import { GetPollWithIDUsecase } from "../../../application/usecase/poll/getpollwithid.usecase";
 import { GiveVoteUsecase } from "../../../application/usecase/poll/givevote.usecase";
 import { GetUserByIdUsecase } from "../../../application/usecase/auth/getuserbyid.usecase";
+import { IMessageController } from "../../interface/message.controller.interface";
+import { MessageController } from "../../controller/message.controller";
+import { IGetMessagesUsecase } from "../../../application/usecaseInterface/message.di";
+import { GetMessagesUsecase } from "../../../application/usecase/message/getMessages.usecase";
+import { IMessageRepository } from "../../../domain/repositories/message.repo";
+import { MessageRepositoryImp } from "../../../infrastructure/repositories/repos/messagerepo.implement";
 
 const userRepo: IUserRepository = new UserRepositoryImp();
 const securePassword: ISecurePassword = new SecurePasswordImp();
@@ -35,3 +41,7 @@ const getPolls: IGetPollsUsecase = new GetPollsUsecase(pollRepo);
 const getPollWithId: IGetPollWithIDUsecase = new GetPollWithIDUsecase(pollRepo);
 const giveVote: IGiveVoteUsecase = new GiveVoteUsecase(pollRepo);
 export const pollControllerDepandancy: IPollController = new PollController(createPoll, getPolls, getPollWithId, giveVote);
+
+const msgRepo: IMessageRepository = new MessageRepositoryImp();
+const getMessages: IGetMessagesUsecase = new GetMessagesUsecase(msgRepo);
+export const messageDepandancy: IMessageController = new MessageController(getMessages);

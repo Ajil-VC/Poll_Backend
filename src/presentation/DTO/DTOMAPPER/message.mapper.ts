@@ -5,6 +5,7 @@ import { MessageWithUser } from "../../../infrastructure/database/model/message.
 
 export class MessageMapper {
     static toResponseDTO(msg: MessageWithUser): Message {
+ 
         return {
             id: msg._id.toString(),
             user: {

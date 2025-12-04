@@ -3,4 +3,6 @@ import { MessageWithUser } from "../../infrastructure/database/model/message.int
 export interface IMessageRepository {
 
     sendMessage(userId: string, message: string, pollId: string, type: "text" | "system"): Promise<MessageWithUser>;
+
+    getMessages(pollId: string, skip: number, limit: number): Promise<MessageWithUser[]>;
 }
