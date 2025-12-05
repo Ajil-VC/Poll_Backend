@@ -3,7 +3,7 @@ import { addUser, getAllUsers, getUserDetails, removeUser } from '../../services
 import { config } from '../config';
 import jwt from 'jsonwebtoken';
 import { User } from '../../../domain/entities/user.type';
-import { sendMsgUsecase } from './socket.di';
+import { giveVoteUsecase, sendMsgUsecase } from './socket.di';
 
 let io: Server | null = null;
 
@@ -49,7 +49,7 @@ export const setupSocket = (server: any) => {
 
         const user: User = socket.data.user;
         const pollId = socket.data.pollId;
-
+console.log(pollId,'from connection ll......');
         if (user.id) {
             addUser(user.id, socket.id, user.email);
 
@@ -67,15 +67,13 @@ export const setupSocket = (server: any) => {
         }
 
         socket.on('send-message', async (data) => {
-            // const username = users.get(socket.id);
+            
             try {
 
-                console.log(data)
-                const message = await sendMsgUsecase.execute(user.id, data.text, data.pollId);
+                const message = await sendMsgUsecase.execute(user.id, data.text, pollId);
 
                 if (io) {
                     io.emit('new-message', message);
-                    console.log('Message sent:', message);
                 }
 
             } catch (err) {
@@ -88,6 +86,21 @@ export const setupSocket = (server: any) => {
             const userDtls = getUserDetails(user.id);
             if (userDtls) {
                 socket.broadcast.emit('user-typing', { email: userDtls.userEmail, isTyping });
+            }
+        });
+
+        socket.on('poll', async (data) => {
+            
+            try {
+
+                const poll = await giveVoteUsecase.execute(pollId, data.optionId, user.id);
+
+                if (io) {
+                    io.emit('new-poll', poll);
+                }
+
+            } catch (err) {
+                console.error(err);
             }
         });
 

@@ -40,7 +40,7 @@ const createPoll: ICreatepollUsecase = new CreatePollUsecase(pollRepo);
 const getPolls: IGetPollsUsecase = new GetPollsUsecase(pollRepo);
 const getPollWithId: IGetPollWithIDUsecase = new GetPollWithIDUsecase(pollRepo);
 const giveVote: IGiveVoteUsecase = new GiveVoteUsecase(pollRepo);
-export const pollControllerDepandancy: IPollController = new PollController(createPoll, getPolls, getPollWithId, giveVote);
+export const pollControllerDepandancy: IPollController = new PollController(createPoll, getPolls, getPollWithId);
 
 const msgRepo: IMessageRepository = new MessageRepositoryImp();
 const getMessages: IGetMessagesUsecase = new GetMessagesUsecase(msgRepo);

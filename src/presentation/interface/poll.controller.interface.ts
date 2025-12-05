@@ -7,5 +7,4 @@ export interface IPollController {
     getPolls(req: Request, res: Response, next: NextFunction): Promise<void>;
     getPollWithId(req: Request, res: Response, next: NextFunction): Promise<void>;
 
-    giveVote(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

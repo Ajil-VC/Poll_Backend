@@ -21,7 +21,6 @@ userRouter.post('/signup', authControllerDepandancy.signup);
 userRouter.route('/poll')
     .post(authenticateAdmin, pollControllerDepandancy.createPoll)
     .get(authenticateAdmin, pollControllerDepandancy.getPolls)
-    .put(authenticateAdmin, pollControllerDepandancy.giveVote);
 
 userRouter.get('/poll/:id', pollControllerDepandancy.getPollWithId);
 

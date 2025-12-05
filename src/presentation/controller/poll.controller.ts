@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { IPollController } from "../interface/poll.controller.interface";
-import { ICreatepollUsecase, IGetPollsUsecase, IGetPollWithIDUsecase, IGiveVoteUsecase } from "../../application/usecaseInterface/poll.di";
+import { ICreatepollUsecase, IGetPollsUsecase, IGetPollWithIDUsecase} from "../../application/usecaseInterface/poll.di";
 import { ResponseDTO } from "../DTO/DTO/response.dto";
 import { Poll } from "../../domain/entities/poll.type";
 import { RESPONSE_MESSAGES } from "../../infrastructure/config/response.msg";
@@ -13,32 +13,8 @@ export class PollController implements IPollController {
     constructor(
         private _createPoll: ICreatepollUsecase,
         private _getPolls: IGetPollsUsecase,
-        private _getPollWithId: IGetPollWithIDUsecase,
-        private _giveVote: IGiveVoteUsecase
+        private _getPollWithId: IGetPollWithIDUsecase
     ) { }
-
-    giveVote = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-
-        try {
-
-            const { pollId, optionId } = req.body;
-            
-            const poll = await this._giveVote.execute(pollId, optionId, req.user.id);
-
-            const response: ResponseDTO<Poll> = {
-                status: true,
-                message: `Successfully voted`,
-                data: poll
-            }
-
-            res.status(HttpStatusCode.OK).json(response);
-            return;
-
-        } catch (err) {
-            next(err);
-        }
-
-    }
 
     getPollWithId = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
