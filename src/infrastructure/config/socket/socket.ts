@@ -49,7 +49,7 @@ export const setupSocket = (server: any) => {
 
         const user: User = socket.data.user;
         const pollId = socket.data.pollId;
-console.log(pollId,'from connection ll......');
+        
         if (user.id) {
             addUser(user.id, socket.id, user.email);
 

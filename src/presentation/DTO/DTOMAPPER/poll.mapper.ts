@@ -1,4 +1,4 @@
-import { Poll } from "../../../domain/entities/poll.type";
+import { ListPoll, Poll } from "../../../domain/entities/poll.type";
 import { PollDocument } from "../../../infrastructure/database/model/poll.interface";
 
 
@@ -17,4 +17,15 @@ export class PollMapper {
 
         };
     }
+
+    static toPollListDTO(poll: PollDocument): ListPoll {
+
+        return {
+            id: poll._id.toString(),
+            question: poll.question,
+            expiresAt: poll.expiresAt,
+            isActive: poll.isActive
+        }
+    }
 }
+

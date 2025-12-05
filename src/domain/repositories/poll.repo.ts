@@ -8,4 +8,6 @@ export interface IPollRepository {
     getPollWithId(id: string): Promise<PollDocument>;
 
     giveVote(pollId: string, optionId: string, userId: string): Promise<PollDocument>;
+
+    getUserPollList(userId: string): Promise<PollDocument[]>;
 }

@@ -10,7 +10,7 @@ import { IAuthController } from "../../interface/auth.controller.interface";
 import { IPollController } from "../../interface/poll.controller.interface";
 import { PollController } from "../../controller/poll.controller";
 import { PollRepositoryImp } from "../../../infrastructure/repositories/repos/pollrepo.implement";
-import { ICreatepollUsecase, IGetPollsUsecase, IGetPollWithIDUsecase, IGiveVoteUsecase } from "../../../application/usecaseInterface/poll.di";
+import { ICreatepollUsecase, IGetPollsUsecase, IGetPollWithIDUsecase, IGetUserPollsList, IGiveVoteUsecase } from "../../../application/usecaseInterface/poll.di";
 import { CreatePollUsecase } from "../../../application/usecase/poll/createpoll.usecase";
 import { IPollRepository } from "../../../domain/repositories/poll.repo";
 import { GetPollsUsecase } from "../../../application/usecase/poll/getpolls.usecase";
@@ -23,6 +23,7 @@ import { IGetMessagesUsecase } from "../../../application/usecaseInterface/messa
 import { GetMessagesUsecase } from "../../../application/usecase/message/getMessages.usecase";
 import { IMessageRepository } from "../../../domain/repositories/message.repo";
 import { MessageRepositoryImp } from "../../../infrastructure/repositories/repos/messagerepo.implement";
+import { GetUserPollList } from "../../../application/usecase/poll/getuserpolllist.usecase";
 
 const userRepo: IUserRepository = new UserRepositoryImp();
 const securePassword: ISecurePassword = new SecurePasswordImp();
@@ -39,8 +40,8 @@ const pollRepo: IPollRepository = new PollRepositoryImp();
 const createPoll: ICreatepollUsecase = new CreatePollUsecase(pollRepo);
 const getPolls: IGetPollsUsecase = new GetPollsUsecase(pollRepo);
 const getPollWithId: IGetPollWithIDUsecase = new GetPollWithIDUsecase(pollRepo);
-const giveVote: IGiveVoteUsecase = new GiveVoteUsecase(pollRepo);
-export const pollControllerDepandancy: IPollController = new PollController(createPoll, getPolls, getPollWithId);
+const getUserPollsList: IGetUserPollsList = new GetUserPollList(pollRepo);
+export const pollControllerDepandancy: IPollController = new PollController(createPoll, getPolls, getPollWithId, getUserPollsList);
 
 const msgRepo: IMessageRepository = new MessageRepositoryImp();
 const getMessages: IGetMessagesUsecase = new GetMessagesUsecase(msgRepo);
