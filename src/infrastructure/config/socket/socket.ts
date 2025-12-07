@@ -52,11 +52,11 @@ export const setupSocket = (server: any) => {
             addUser(user.id, socket.id, user.email);
             socket.data.pollId = pollId;
             socket.join(`poll_${pollId}`);
-
+            
             socket.broadcast
                 .to(`poll_${pollId}`)
                 .emit('user_online', user.id);
-            console.log(`User ${user.id} connected with socket ${socket.id}`);
+            console.log(`User ${user.email} connected with socket ${socket.id} with poll ${pollId}`);
         });
 
         socket.on('send-message', async (data) => {
@@ -66,7 +66,7 @@ export const setupSocket = (server: any) => {
                 const message = await sendMsgUsecase.execute(user.id, data.text, pollId);
 
                 if (io) {
-                    io.emit('new-message', message);
+                    io.to(`poll_${pollId}`).emit('new-message', message);
                 }
 
             } catch (err) {
@@ -76,9 +76,15 @@ export const setupSocket = (server: any) => {
 
         // Handle typing indicator
         socket.on('typing', (isTyping) => {
+            const pollId = socket.data.pollId;
             const userDtls = getUserDetails(user.id);
             if (userDtls) {
-                socket.broadcast.emit('user-typing', { email: userDtls.userEmail, isTyping });
+                socket.broadcast
+                    .to(`poll_${pollId}`)
+                    .emit('user-typing', {
+                        email: userDtls.userEmail,
+                        isTyping
+                    });
             }
         });
 
@@ -89,7 +95,8 @@ export const setupSocket = (server: any) => {
                 const poll = await giveVoteUsecase.execute(pollId, data.optionId, user.id);
 
                 if (io) {
-                    io.emit('new-poll', poll);
+
+                    io.to(`poll_${pollId}`).emit('new-poll', poll);
                 }
 
             } catch (err) {
@@ -99,10 +106,11 @@ export const setupSocket = (server: any) => {
 
         socket.on('disconnect', () => {
             const pollId = socket.data.pollId;
-            removeUser(socket.id);
             socket.broadcast
                 .to(`poll_${pollId}`)
                 .emit('user_offline', user.id);
+
+            removeUser(socket.id);
 
             console.log('user disconnected', user.id);
         });
