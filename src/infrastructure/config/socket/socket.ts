@@ -46,30 +46,23 @@ export const setupSocket = (server: any) => {
 
     io.on('connection', (socket) => {
 
-
         const user: User = socket.data.user;
-        const pollId = socket.data.pollId;
-console.log(pollId,'from connection ll......');
-        if (user.id) {
-            addUser(user.id, socket.id, user.email);
 
-            // Join the room for this poll
+        socket.on('join-poll', (pollId) => {
+            addUser(user.id, socket.id, user.email);
+            socket.data.pollId = pollId;
             socket.join(`poll_${pollId}`);
 
-            socket.emit('online-users', Array.from(getAllUsers().keys()));
-
-            // Notify others in the same poll
             socket.broadcast
                 .to(`poll_${pollId}`)
                 .emit('user_online', user.id);
-
             console.log(`User ${user.id} connected with socket ${socket.id}`);
-        }
+        });
 
         socket.on('send-message', async (data) => {
-            
-            try {
 
+            try {
+                const pollId = socket.data.pollId;
                 const message = await sendMsgUsecase.execute(user.id, data.text, pollId);
 
                 if (io) {
@@ -90,9 +83,9 @@ console.log(pollId,'from connection ll......');
         });
 
         socket.on('poll', async (data) => {
-            
-            try {
 
+            try {
+                const pollId = socket.data.pollId;
                 const poll = await giveVoteUsecase.execute(pollId, data.optionId, user.id);
 
                 if (io) {
@@ -105,8 +98,8 @@ console.log(pollId,'from connection ll......');
         });
 
         socket.on('disconnect', () => {
+            const pollId = socket.data.pollId;
             removeUser(socket.id);
-
             socket.broadcast
                 .to(`poll_${pollId}`)
                 .emit('user_offline', user.id);
