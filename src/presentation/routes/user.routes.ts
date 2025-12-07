@@ -22,6 +22,8 @@ userRouter.route('/poll')
     .post(authenticateAdmin, pollControllerDepandancy.createPoll)
     .get(authenticateAdmin, pollControllerDepandancy.getPolls)
 
+userRouter.get('/poll-list', authenticateAdmin, pollControllerDepandancy.getUserPollsList);
+
 userRouter.get('/poll/:id', pollControllerDepandancy.getPollWithId);
 
 userRouter.get('/message', messageDepandancy.getMessages);

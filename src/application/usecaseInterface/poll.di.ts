@@ -1,4 +1,4 @@
-import { Poll } from "../../domain/entities/poll.type";
+import { ListPoll, Poll } from "../../domain/entities/poll.type";
 import { PollDocument } from "../../infrastructure/database/model/poll.interface";
 
 
@@ -16,4 +16,8 @@ export interface IGetPollWithIDUsecase {
 
 export interface IGiveVoteUsecase {
     execute(pollId: string, optionId: string, userId: string): Promise<Poll>;
+}
+
+export interface IGetUserPollsList {
+    execute(userId: string): Promise<ListPoll[]>;
 }

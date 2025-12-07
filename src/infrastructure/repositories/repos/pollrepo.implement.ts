@@ -9,6 +9,22 @@ import voteModel from "../../database/vote.model";
 export class PollRepositoryImp implements IPollRepository {
 
 
+    getUserPollList = async (userId: string): Promise<PollDocument[]> => {
+
+        const userOb = new mongoose.Types.ObjectId(userId);
+
+        const votes = await voteModel.find({ userId: userOb })
+            .populate({ path: "pollId" })
+            .select("pollId -_id");
+
+        const polls = votes.map((p: { pollId: PollDocument }) => {
+            return p.pollId
+        })
+
+        return polls
+    }
+
+
     giveVote = async (pollId: string, optionId: string, userId: string): Promise<PollDocument> => {
 
         const pollOb = new mongoose.Types.ObjectId(pollId);
