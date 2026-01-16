@@ -14,6 +14,7 @@ const userRouter = express.Router();
 userRouter.use(express.urlencoded({ extended: true }));
 
 userRouter.get('/authenticate-user', authenticateUser, authControllerDepandancy.authenticateUser);
+userRouter.post('/refresh-token', authControllerDepandancy.refreshToken);
 
 userRouter.post('/login', authControllerDepandancy.login);
 userRouter.post('/signup', authControllerDepandancy.signup);

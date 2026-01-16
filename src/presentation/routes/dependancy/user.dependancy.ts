@@ -1,6 +1,6 @@
 import { SigninUseCase } from "../../../application/usecase/auth/login.usecase";
 import { SignUpUseCase } from "../../../application/usecase/auth/signup.usecase";
-import { IGetUserByIdUsecase, ISigninUsecase, ISignUpUseCase } from "../../../application/usecaseInterface/auth.di";
+import { IGetRefreshTokenUsecase, IGetUserByIdUsecase, ISigninUsecase, ISignUpUseCase } from "../../../application/usecaseInterface/auth.di";
 import { AuthController } from "../../controller/auth.controller";
 import { IUserRepository } from "../../../domain/repositories/user.repo";
 import { ISecurePassword } from "../../../domain/services/securePassword.interface";
@@ -24,16 +24,19 @@ import { GetMessagesUsecase } from "../../../application/usecase/message/getMess
 import { IMessageRepository } from "../../../domain/repositories/message.repo";
 import { MessageRepositoryImp } from "../../../infrastructure/repositories/repos/messagerepo.implement";
 import { GetUserPollList } from "../../../application/usecase/poll/getuserpolllist.usecase";
+import { GetRefreshTokenUsecase } from "../../../application/usecase/auth/getRefreshtoken.usecase";
 
 const userRepo: IUserRepository = new UserRepositoryImp();
 const securePassword: ISecurePassword = new SecurePasswordImp();
 const signInUsecase: ISigninUsecase = new SigninUseCase(userRepo, securePassword);
 const signUpUsecase: ISignUpUseCase = new SignUpUseCase(securePassword, userRepo);
 const getUserByIdUsecase: IGetUserByIdUsecase = new GetUserByIdUsecase(userRepo);
+const getRefreshTokenUsecase: IGetRefreshTokenUsecase = new GetRefreshTokenUsecase(userRepo);
 export const authControllerDepandancy: IAuthController = new AuthController(
     signInUsecase,
     signUpUsecase,
-    getUserByIdUsecase
+    getUserByIdUsecase,
+    getRefreshTokenUsecase
 );
 
 const pollRepo: IPollRepository = new PollRepositoryImp();

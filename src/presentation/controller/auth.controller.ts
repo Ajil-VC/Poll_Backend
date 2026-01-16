@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { IAuthController } from "../interface/auth.controller.interface";
 import { HttpStatusCode } from "../../infrastructure/config/http-status-enum";
 import { RESPONSE_MESSAGES } from "../../infrastructure/config/response.msg";
-import { IGetUserByIdUsecase, ISigninUsecase, ISignUpUseCase } from "../../application/usecaseInterface/auth.di";
+import { IGetRefreshTokenUsecase, IGetUserByIdUsecase, ISigninUsecase, ISignUpUseCase } from "../../application/usecaseInterface/auth.di";
 import { ResponseDTO } from "../DTO/DTO/response.dto";
 import { User } from "../../domain/entities/user.type";
 
@@ -12,8 +12,42 @@ export class AuthController implements IAuthController {
     constructor(
         private _signinUsecase: ISigninUsecase,
         private _signupUsecase: ISignUpUseCase,
-        private _getUserByIdUsecase: IGetUserByIdUsecase
+        private _getUserByIdUsecase: IGetUserByIdUsecase,
+        private _refreshTokenUsecase: IGetRefreshTokenUsecase
     ) { }
+
+    refreshToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+
+        try {
+
+            console.log('Ivedethund but.....');
+            const refreshToken = req.cookies.refreshToken;
+console.log(refreshToken,'From abacklj ')
+            if (!refreshToken) {
+                res.status(HttpStatusCode.UNAUTHORIZED).json({ message: 'No refresh token provided' });
+                return
+            }
+
+            const result = await this._refreshTokenUsecase.execute(refreshToken);
+            if (!result) {
+                throw new Error('Couldnt create new token');
+            } else if (!result.status) {
+                res.status(HttpStatusCode.BAD_REQUEST).json({ status: result.status, message: result.message });
+                return;
+            } else {
+
+                res.status(result.statusCode).json({
+                    status: result.status,
+                    token: result.token,
+                    forceChangePassword: result.additional
+                });
+
+            }
+
+        } catch (err) {
+            next(err);
+        }
+    }
 
     authenticateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 

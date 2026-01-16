@@ -34,7 +34,9 @@ export class SigninUseCase implements ISigninUsecase {
             throw new Error('JWT secret key is not defined.');
         }
 
-
+        if (!config.JWT_EXPIRES_IN) {
+            throw new Error('Expiration time not set for jwt.');
+        }
         const token = jwt.sign(
             {
                 id: userData.id,
@@ -42,7 +44,7 @@ export class SigninUseCase implements ISigninUsecase {
                 userName: userData.userName
             },
             config.JWT_SECRETKEY,
-            { expiresIn: '15m' }
+            { expiresIn: config.JWT_EXPIRES_IN }
         );
 
         if (!config.REFRESH_TOKEN_SECRET) {

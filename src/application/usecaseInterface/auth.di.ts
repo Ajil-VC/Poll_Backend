@@ -13,3 +13,8 @@ export interface ISignUpUseCase {
 export interface IGetUserByIdUsecase {
     execute(id: string): Promise<User>
 }
+
+
+export interface IGetRefreshTokenUsecase {
+    execute(refreshToken: string): Promise<any>;
+}
