@@ -6,6 +6,8 @@ import { AppError } from './shared/error';
 import connectDB from './infrastructure/config/connectDB';
 import http from 'http';
 import { setupSocket } from './infrastructure/config/socket/socket';
+import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
 
 const app = express();
 connectDB();
@@ -18,6 +20,8 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.json());
+app.use(cookieParser());
+app.use(morgan('dev'));
 
 app.use('/api/v1', userRouter);
 

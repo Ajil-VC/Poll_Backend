@@ -53,7 +53,7 @@ export class SigninUseCase implements ISigninUsecase {
         const refreshToken = jwt.sign(
             { userId: userData.id },
             config.REFRESH_TOKEN_SECRET,
-            { expiresIn: "7d" }
+            { expiresIn: "2d" }
         )
 
         const userWithoutPswd = UserResponseMapper.toResponseDTO(userData);

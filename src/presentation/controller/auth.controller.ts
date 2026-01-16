@@ -20,9 +20,8 @@ export class AuthController implements IAuthController {
 
         try {
 
-            console.log('Ivedethund but.....');
             const refreshToken = req.cookies.refreshToken;
-console.log(refreshToken,'From abacklj ')
+
             if (!refreshToken) {
                 res.status(HttpStatusCode.UNAUTHORIZED).json({ message: 'No refresh token provided' });
                 return
@@ -35,11 +34,10 @@ console.log(refreshToken,'From abacklj ')
                 res.status(HttpStatusCode.BAD_REQUEST).json({ status: result.status, message: result.message });
                 return;
             } else {
-
-                res.status(result.statusCode).json({
+                
+                res.status(HttpStatusCode.OK).json({
                     status: result.status,
-                    token: result.token,
-                    forceChangePassword: result.additional
+                    token: result.token
                 });
 
             }
@@ -90,7 +88,8 @@ console.log(refreshToken,'From abacklj ')
             res.cookie('refreshToken', result.refreshToken, {
                 httpOnly: true,
                 secure: false, //If it is https set it as true.
-                sameSite: 'strict',
+                sameSite: 'lax',
+                path: '/',
                 maxAge: 7 * 24 * 60 * 60 * 1000
             });
 

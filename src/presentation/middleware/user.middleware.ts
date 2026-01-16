@@ -34,7 +34,7 @@ export const authenticateUser = async (req: Request, res: Response, next: NextFu
     }
 
     const token = authHeader.split(' ')[1];
-
+    
     if (!config.JWT_SECRETKEY) {
         throw new Error('JWT secret key is not defined.');
     }
